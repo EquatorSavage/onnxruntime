@@ -148,7 +148,7 @@ void CopySlice(Tensor& dst, const Tensor& src, const size_t slice_id, const size
   auto src_ptr = src.DataRaw();
   auto dst_ptr = dst.MutableDataRaw();
 
-  // If we slice tensor with shape [D1, D2, ..., Dj, sliced_dim, Dk, ..., Dn], then segment_size is slice_size * Dk * ... * Dn.
+  // If we slice tensor with shape [D1, D2, ..., Dj, sliced_dim, Dk, ..., Dn], then segment_size is Dk * ... * Dn.
   size_t segment_size = 1;
   // The total number of combinations of (D1, D2, ..., Dj). It's used as the total count of segments.
   size_t num_segments = 1;
@@ -156,8 +156,6 @@ void CopySlice(Tensor& dst, const Tensor& src, const size_t slice_id, const size
   for (size_t i = 0; i < static_cast<size_t>(src_shape.NumDimensions()); ++i) {
     if (i > slice_axis) {
       segment_size *= src_shape[i];
-    } else if (i == slice_axis) {
-      segment_size *= slice_size;
     }
     if (i < slice_axis) {
       num_segments *= src_shape[i];

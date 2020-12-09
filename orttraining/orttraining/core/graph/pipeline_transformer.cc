@@ -58,6 +58,7 @@ void CreateFakeOutput(
     Graph& graph,                   // the graph of a pipeline stage.
     const std::string output_name,  // The fake output's name to add to the graph.
     const std::unordered_map<std::string, std::vector<int>>& sliced_schema) {
+  // TODO: fix it by passing in tensor types.
   const ONNX_NAMESPACE::TensorProto_DataType element_type = ONNX_NAMESPACE::TensorProto_DataType_FLOAT;
   ONNX_NAMESPACE::TypeProto type_proto;
   type_proto.mutable_tensor_type()->set_elem_type(element_type);

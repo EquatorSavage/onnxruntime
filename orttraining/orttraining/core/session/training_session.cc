@@ -159,7 +159,6 @@ Status TrainingSession::PartitionGraphForPipeline(
     const optional<TrainingConfiguration::DistributedConfiguration>& distributed_config,
     const std::unordered_set<std::string>& /*weight_names_to_train*/,
     std::unordered_set<std::string>& /*filtered_config_weight_names_to_train*/) {
-  std::cout << "[training_session.cc] TrainingSession::PartitionGraphForPipeline" << std::endl;
   if (!pipeline_config.has_value() || !pipeline_config.value().do_partition) {
     return Status::OK();
   }
@@ -189,7 +188,6 @@ Status TrainingSession::SetEventSynchronization(
     const optional<TrainingConfiguration::DistributedConfiguration>& /*distributed_config*/,
     const std::unordered_set<std::string>& weight_names_to_train,
     optional<TrainingConfigurationResult::PipelineConfigurationResult>& pipeline_config_result) {
-  std::cout << "[training_session.cc] TrainingSession::SetEventSynchronization" << std::endl;
   if (!pipeline_config.has_value()) {
     return Status::OK();
   }
@@ -1223,7 +1221,6 @@ Status PipelineTrainingSession::PartitionGraphForPipeline(
     const optional<TrainingConfiguration::DistributedConfiguration>& distributed_config,
     const std::unordered_set<std::string>& weight_names_to_train,
     std::unordered_set<std::string>& filtered_config_weight_names_to_train) {
-  std::cout << "[training_session.cc] PipelineTrainingSession::PartitionGraphForPipeline" << std::endl;
   ORT_ENFORCE(pipeline_context_.expected_output_names.empty(),
               "Output name list should be empty before running this function. ",
               "It will be filled with the names of model's outputs when pipeline parallel is used.");
@@ -1274,7 +1271,6 @@ Status PipelineTrainingSession::SetEventSynchronization(
     const optional<TrainingConfiguration::DistributedConfiguration>& distributed_config,
     const std::unordered_set<std::string>& weight_names_to_train,
     optional<TrainingConfigurationResult::PipelineConfigurationResult>& pipeline_config_result) {
-  std::cout << "[training_session.cc] PipelineTrainingSession::SetEventSynchronization" << std::endl;
   if (!pipeline_config.has_value()) {
     pipeline_schedule_ = pipeline::PipelineScheduler(1, distributed_config.value().pipeline_parallel_size);
     pipeline_worker_pool_ = pipeline::PipelineWorkerPool(distributed_config.value().pipeline_parallel_size);
