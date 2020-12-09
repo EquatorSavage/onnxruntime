@@ -24,6 +24,7 @@ class TrainingSession : public InferenceSession {
 
   TrainingSession(const SessionOptions& session_options, const Environment& env)
       : InferenceSession(session_options, env) {}
+  virtual ~TrainingSession() {};
 
   /**
    * The training configuration options.
@@ -519,7 +520,7 @@ class PipelineTrainingSession final : public TrainingSession {
       : TrainingSession(session_options, env) {}
   common::Status ConfigureForTraining(const TrainingConfiguration& config, TrainingConfigurationResult& config_result_out) override;
   common::Status Run(const RunOptions& run_options, IOBinding& io_binding) override;
-  ~PipelineTrainingSession() override;
+  ~PipelineTrainingSession();
 
  protected:
   Status PartitionGraphForPipeline(

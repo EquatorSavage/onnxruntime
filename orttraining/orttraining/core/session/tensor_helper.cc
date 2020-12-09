@@ -10,28 +10,20 @@ namespace training {
 // Return the shape of a tensor slice.
 std::vector<int64_t> GetSliceShape(
     const std::vector<int64_t>& shape,  // before-slicing tensor shape
-    const size_t& slice_axis,           // axis to slice along
-    const size_t& num_slices) {         // number of slices along the slicing axis
+    const size_t slice_axis,           // axis to slice along
+    const size_t num_slices) {         // number of slices along the slicing axis
   ORT_ENFORCE(shape.size() > 0);
   ORT_ENFORCE(slice_axis < shape.size());
   ORT_ENFORCE(num_slices > 0);
+  ORT_ENFORCE(shape.at(slice_axis) > 0);
+  ORT_ENFORCE(shape.at(slice_axis) % num_slices == 0);
 
   // Shape of slice along slice_axis.
-  std::vector<int64_t> slice_shape;
-
-  // Go through the original dimensions to get the dimensions after slicing.
-  for (size_t i_shape = 0; i_shape < shape.size(); ++i_shape) {
-    const auto d = shape[i_shape];
-
-    // Compute slice's shape.
-    if (i_shape == slice_axis) {
-      // Dimension shrinks due to slicing.
-      slice_shape.push_back(d / num_slices);
-    } else {
-      // Dimension not sliced, so we just copy its original value.
-      slice_shape.push_back(d);
-    }
-  }
+  std::vector<int64_t> slice_shape(shape.size());
+  // Compute original slice's shape.
+  std::copy(shape.begin(), shape.end(), slice_shape.begin());
+  // Replace the sliced dimension.
+  slice_shape.at(slice_axis) = shape.at(slice_axis) / num_slices;
 
   return slice_shape;
 }
@@ -64,7 +56,7 @@ OrtValue CreateCpuTensorValue(
 void CopyGpuToCpu(
     void* dst_ptr,
     const void* src_ptr,
-    const size_t& size,
+    const size_t size,
     const OrtMemoryInfo& dst_location,
     const OrtMemoryInfo& src_location) {
   ORT_ENFORCE(dst_location.device.Type() == OrtDevice::CPU);
@@ -90,7 +82,7 @@ void CopyGpuToCpu(
 void CopyCpuToCpu(
     void* dst_ptr,
     const void* src_ptr,
-    const size_t& size,
+    const size_t size,
     const OrtMemoryInfo& dst_location,
     const OrtMemoryInfo& src_location) {
   ORT_ENFORCE(src_location.device.Type() == OrtDevice::CPU);

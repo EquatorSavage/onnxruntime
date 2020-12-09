@@ -1355,8 +1355,12 @@ Status PipelineTrainingSession::SetEventSynchronization(
 
 common::Status PipelineTrainingSession::Run(const RunOptions& run_options, IOBinding& io_binding) {
   if (pipeline_context_.num_pipeline_stages > 1) {
+    // Run pipeline parallel implemented using multi-threading.
+    // Each thread may be responsible for running one micro-batch.
     return RunWithPipeline(run_options, io_binding);
   } else {
+    // Run the session without multi-threading.
+    // All batches are executed on the main thread.
     return TrainingSession::Run(run_options, io_binding);
   }
 }
